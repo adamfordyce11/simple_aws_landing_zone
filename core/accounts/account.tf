@@ -9,9 +9,9 @@ resource "aws_organizations_organizational_unit" "workload" {
 
 
 resource "aws_organizations_organizational_unit" "account" {
-  count          = length(var.accounts)
-  name           = var.accounts[count.index].account_name
-  parent_id      = aws_organizations_organizational_unit.workload.id
+  count     = length(var.accounts)
+  name      = var.accounts[count.index].account_name
+  parent_id = aws_organizations_organizational_unit.workload.id
 
   depends_on = [
     aws_organizations_organizational_unit.workload
@@ -19,10 +19,10 @@ resource "aws_organizations_organizational_unit" "account" {
 }
 
 resource "aws_organizations_account" "account" {
-  count          = length(var.accounts)
+  count = length(var.accounts)
   # A friendly name for the member account
-  name           = var.accounts[count.index].account_name
-  email          = var.accounts[count.index].account_email
+  name  = var.accounts[count.index].account_name
+  email = var.accounts[count.index].account_email
 
   # Enables IAM users to access account billing information 
   # if they have the required permissions
