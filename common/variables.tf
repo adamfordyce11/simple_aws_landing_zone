@@ -1,4 +1,4 @@
-variable account {
+variable "account" {
   description = "Platform Account"
 }
 
