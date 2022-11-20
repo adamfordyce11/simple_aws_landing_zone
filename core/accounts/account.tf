@@ -8,29 +8,31 @@ resource "aws_organizations_organizational_unit" "workload" {
 }
 
 
-resource "aws_organizations_organizational_unit" "dev" {
-  name      = vars.account_name
-  parent_id = aws_organizations_organizational_unit.workload.id
+resource "aws_organizations_organizational_unit" "account" {
+  count          = length(var.accounts)
+  name           = var.accounts[count.index].account_name
+  parent_id      = aws_organizations_organizational_unit.workload.id
 
   depends_on = [
     aws_organizations_organizational_unit.workload
   ]
 }
 
-resource "aws_organizations_account" "dev" {
+resource "aws_organizations_account" "account" {
+  count          = length(var.accounts)
   # A friendly name for the member account
-  name  = vars.account_name
-  email = vars.account_email
+  name           = var.accounts[count.index].account_name
+  email          = var.accounts[count.index].account_email
 
   # Enables IAM users to access account billing information 
   # if they have the required permissions
   iam_user_access_to_billing = "ALLOW"
 
   tags = {
-    Name  = "${vars.account_name}"
-    Owner = "${vars.owner}"
-    Role  = "${vars.role}"
+    Name  = "${var.accounts[count.index].account_name}"
+    Owner = "${var.accounts[count.index].owner}"
+    Role  = "${var.accounts[count.index].role}"
   }
 
-  parent_id = "aws_organizations_organizational_unit.${vars.account_name}.id"
+  parent_id = aws_organizations_organizational_unit.account[count.index].id
 }
