@@ -18,6 +18,7 @@ resource "aws_organizations_organizational_unit" "account" {
   ]
 }
 
+# TODO - Don't add accounts here - accounts should assume role!
 resource "aws_organizations_account" "account" {
   count = length(var.accounts)
   # A friendly name for the member account
