@@ -23,7 +23,29 @@ terraform apply backend.plan
 
 popd &> /dev/null
 
-# VPC
+# Organisations
+pushd core/accounts &> /dev/null
+terraform                                                                     \
+    init                                                                      \
+    -backend-config="profile=${profile}"                                      \
+    -backend-config="region=${region}"                                        \
+    -backend-config="bucket=${bucket}"                                        \
+    -backend-config="key=states/${account}.tfstate"                           \
+    -backend-config="encrypt=true"                                            \
+    -backend-config="dynamodb_table=terraform-lock"
+
+terraform                                                                     \
+    plan                                                                      \
+    -out=accounts.plan                                                        \
+    -var-file="vars/accounts.tfvars.json"
+
+terraform apply accounts.plan
+
+popd &> /dev/null
+
+exit
+
+# VPC - Need to run this for each organizational unit
 pushd core/vpc &> /dev/null
 
 terraform                                                                     \
