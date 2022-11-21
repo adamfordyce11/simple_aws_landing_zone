@@ -1,5 +1,5 @@
-variable account {
-  description = "Platform Account"
+variable "accounts" {
+  description = "Platform Accounts"
 }
 
 variable "region" {
